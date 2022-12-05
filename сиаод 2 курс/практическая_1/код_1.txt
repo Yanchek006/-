@@ -1,0 +1,162 @@
+#include <iostream>
+using namespace std;
+
+int Exercise1(int x);
+int Exercise2(int x, int n);
+int Exercise3(int x);
+int Exercise4(int x);
+int Exercise5(int x, int n);
+
+void toBin(int x)
+{
+	int n;
+	n = sizeof(int) * 8;
+	unsigned maska = (1 << (n - 1));
+	for (int i = 1; i <= n; i++)
+	{
+		cout << ((x & maska) >> (n - i));
+		maska = maska >> 1;
+	}
+}
+
+int NBin(int x)
+{
+	int y = 0;
+	if (x != 0)
+	{
+		x = x / 2;
+		y = y + 1 + NBin(x);
+	}
+	return y;
+}
+
+int main()
+{
+	setlocale(LC_ALL, "RUSSIAN");
+	int number;
+	cycle:
+	cout << "Введите номер упражения:\n";
+	cout << "1- установка на 3, 5 и 11 бит значения единицы \n"<<"2- обнуление 4 старших битов вашего числа\n"
+		<<"3- сдвиг битов влево на 7 разрядов\n"<<"4- сдвиг битов вправо на 7 разрядов\n"<<"5- установка n-ого бита\n"<<"0- для выхода\n";
+	cin >> number;
+	switch (number)
+	{
+	case 1:
+	{
+		int x = 0xBFAC;
+		cout << "Число в 16-ричной системе: " << hex << x << "\n";
+		cout << "Новое число в десятичной системе: " << dec << x << "\n";
+		cout << "Число в 2-ичной системе: ";
+		toBin(x);
+		x = Exercise1(x);
+		cout << "\nНовое число:		 ";
+		toBin(x);
+		cout << "\nНовое число в десятичной системе: " << dec << x;
+		cout << "\n\n";
+		goto cycle;
+	}
+	case 2:
+	{
+		int x, n;
+		cout << "Введите число: ";
+		cin >> x;
+		n = NBin(x);
+		cout << "Число в 2-ичной системе: ";
+		toBin(x);
+		x = Exercise2(x, n);
+		cout << "\nНовое число:		 ";
+		toBin(x);
+		cout << "\nНовое число в десятичной системе: " << x;
+		cout << "\n\n";
+		goto cycle;
+	}
+	case 3:
+	{
+		int x;
+		cout << "Введите число: ";
+		cin >> x;
+		cout << "Число в 2-ичной системе: ";
+		toBin(x);
+		x = Exercise3(x);
+		cout << "\nНовое число:		 ";
+		toBin(x);
+		cout << "\nНовое число в десятичной системе: " << x;
+		cout << "\n\n";
+		goto cycle;
+	}
+	case 4:
+	{
+		int x;
+		cout << "Введите число: ";
+		cin >> x;
+		cout << "Число в 2-ичной системе: ";
+		toBin(x);
+		x = Exercise4(x);
+		cout << "\nНовое число:		 ";
+		toBin(x);
+		cout << "\nНовое число в десятичной системе: " << x;
+		cout << "\n\n";
+		goto cycle;
+	}
+	case 5:
+	{
+		int x, n;
+		cout << "Введите число: ";
+		cin >> x;
+		cout << "\nвведите бит, который хотите установить: ";
+		cin >> n;
+		cout << "Число в 2-ичной системе: ";
+		toBin(x);
+		x = Exercise5(x, n);
+		cout << "\nНовое число:		 ";
+		toBin(x);
+		cout << "\nНовое число в десятичной системе: " << x;
+		cout << "\n\n";
+		goto cycle;
+	}
+	default:
+	{
+		break;
+	}
+	}
+	return 0;
+}
+
+
+
+int Exercise1(int x)
+{
+	x = x | 0x1410;
+	return x;
+}
+
+int Exercise2(int x, int n)
+{
+	unsigned maska = (0 << 3);
+	for (int i = 5; i <= n; i++)//сохранение битов, следующих после 4 главных битов(для числа случайной длинны)
+	{
+		maska = maska << 1;
+		maska = maska | 1;
+	}
+	x=x& maska;
+	return x;
+}
+
+int Exercise3(int x)
+{
+	x = x << 7;
+	return x;
+}
+
+int Exercise4(int x)
+{
+	x = x >> 7;
+	return x;
+}
+
+int Exercise5(int x, int n)
+{
+	unsigned maska = 0x80000000;
+	x = x | (maska >> (31 - n));//маска сдвигается до n-ого бита, тем самым устанавливая только нужный бит
+	return x;
+}

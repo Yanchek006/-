@@ -1,0 +1,84 @@
+#include <iostream>
+#include <chrono>
+#include <time.h>
+#include <ctime>
+#include <stdlib.h>
+using namespace std;
+//сортировка пузырьком
+void Puzir()
+{
+    const int n = 5;
+    int i, k;
+    int a[n];
+    unsigned int start_time, end_time, search_time;
+    start_time = clock();
+    bool b;
+    cout<<"Выберите, как хотите ввести массив:\n0- Вручную\n1- Автоматически\n";
+    cin>>b;
+    cout << "Массив: ";
+    for (i = 0; i < n; i++)
+    {
+        if (!b)
+        {
+            cout << "\nВведите " << i + 1 << " элемент массива ";
+            cin >> a[i];
+        }
+        else
+        {
+            a[i] = rand() % 10000000;
+            cout << a[i]<<" ";
+        }
+    }
+    end_time = clock();
+    search_time = end_time - start_time;
+    cout << endl<<"Отсортированный массив: ";
+    for (i = 0; i < n; i++)
+        cout << a[i]<<" ";
+    cout<<"\n" << "Время: "<<search_time<<" миллисекунд" << endl;
+
+
+}
+//сортировка новым способом
+void NewMetod()
+{
+    srand(time(NULL));
+    int i, j, k, z;
+    bool* a = new bool[10000000];
+    int n = 5;
+    unsigned int start_time, end_time, search_time;
+    start_time = clock();
+    long int s;
+    cout << endl << "Массив:\n";
+    for (i = 0; i < n; i++)
+    {
+            s = rand() % 10000000;
+            cout<<s<<endl;
+            a[s] = true;
+    }
+    end_time = clock();
+    search_time = end_time - start_time;
+    cout << endl << "Отсортированный массив:\n";
+   for(long int i=0;i<1000000;i++)
+    {
+        if(a[i] == true)
+        {
+            cout<<i<<endl;
+        }
+    }
+    end_time = clock();
+    search_time = end_time - start_time;
+    cout<<"\n" << "Время: "<<search_time<<" миллисекунд" << endl;
+}
+
+int main()
+{
+    setlocale(LC_ALL, "RUSSIAN");
+    unsigned short int k;
+    cout << "Выберите метод сортировки:\n1- Пузырьковый метод\n2- Новый метод\n0- Завершение программы\n";
+    cin >> k;
+    if (k == 1)
+        Puzir();
+    if (k == 2)
+        NewMetod();
+    return 0;
+}

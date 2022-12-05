@@ -1,0 +1,126 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+//функция чтения данных файлв и вывода на монитор физического файла
+//Постусловие 0 - все хорошо, 1 - файл не открылся
+int readTextFile(string nameTF)
+{
+    cout<<"Исходные значения из файла: ";
+    ifstream tf(nameTF);
+    if(!tf) return 1;
+    int x;
+    while(!tf.eof())
+    {
+        tf >> x;
+        cout<<x<<' ';
+    }
+    cout<<'\n';
+    tf.close();
+    return 0;
+}
+
+//Функция создания текстового файла из четырех элементов исходного файла
+//Постусловие: 0 - все хорошо, 1 - вайл не открывется
+int createTextFile(string nameTF, string nameTf2, int arifmetic)
+{
+    cout<<"Нечетные значения: ";
+    ifstream tf(nameTF);
+    if(!tf) return 1;
+    ofstream otf(nameTf2);
+    int x;
+    while(tf>>x)
+    {
+        if(x%2==1)
+        {
+             otf << (x/arifmetic);
+            cout<<x<<' ';
+        }
+    }
+    cout<<'\n';
+    tf.close();
+    otf.close();
+    return 0;
+}
+//функция среднего арифметического
+int Arifmetic(string nameTF)
+{
+    string nameTf2;
+    ifstream tf(nameTF);
+    if(!tf) return 1;
+    ofstream otf(nameTf2);
+    int x;
+    int n;
+     int* arr = new int[n];
+        float sum = 0;
+        float j = 0;
+        int i = 0;
+         while (tf >> arr[i]) {
+
+            if (i % 2 != 0) {
+                sum += arr[i];
+                j++;
+                i++;
+            }
+            else {
+                i++;
+            }
+        }
+        tf.close();
+        cout << "Cреднее арифметическое нечетных компонентов равно: " << sum / j << endl;
+        delete[] arr;
+        system("pause");
+        return sum/j;
+}
+
+int NewFile(string nameTf2, int proverka)
+{
+    cout<<"Формирование нового файла: ";
+      ifstream otf("Fail.txt");
+        if(!otf) return 1;
+        int x;
+
+           ofstream tf(nameTf2);
+         while(!otf.eof())
+    {
+       otf>>x;
+        if(x%2==1)
+        {
+            tf<< x/proverka <<" ";
+            cout<<float(x)/proverka<<" ";
+        }
+    }
+        cout<<'\n';
+        tf.close();
+        return 0;
+}
+
+//функция добавления чисел в файл
+//Постусловие: 0 - все хорошо, 1 - вайл не открывется
+int addTextFile(string nameFile, int a, int b)
+{
+    ofstream otf(nameFile, ios::app);
+    if(!otf) return 1;
+    otf<<'\n'<<a<<' '<<b;
+    otf.close();
+    return 0;
+}
+
+int main()
+{
+    setlocale(LC_ALL,"Russian");
+    int arifmetic = Arifmetic("Fail.txt");
+    int proverka = readTextFile("Fail.txt");
+    if(proverka == 0)
+    {
+       proverka = createTextFile("Fail.txt", "Two.txt", arifmetic);
+        proverka = NewFile( "Two.txt",arifmetic);
+        if(proverka==0)
+        {
+            int proverka;
+        }
+        else{
+            cout<<"File not found";
+        }
+    }
+}

@@ -1,0 +1,97 @@
+#include <iostream>
+
+using namespace std;
+struct typeitem
+{
+    int key=0;
+    int offset=0;
+    bool openORclose = true; //свободна
+    bool deleteORnot = false; //не удалось
+};
+
+struct HeshTable
+{
+    int L=19;
+    typeitem* T;
+    void createHeshTable()
+    {
+        T=new typeitem[L];
+    }
+};
+
+//хеш-функция
+int hesh(int key, int L)
+{
+    return key % L;
+}
+
+//вставка элементов
+int insertInHeshTable(int key,int offset, HeshTable& t)
+{
+    int i = hesh(key,t.L); //ключ и размер
+    //разделение коллизии
+    while(i<t.L && t.T[i].openORclose == false)
+        i++;
+        if(i<t.L)
+        {
+            t.T[i].key = key;
+            t.T[i].offset = offset;
+            t.T[i].openORclose = false;
+            return 0;
+        }
+        else return 1;//таблица заполнена полностью
+}
+
+void outTable(HeshTable& t)
+{
+    for(int i=0;i<t.L;i++)
+        cout<<i<<" "<< t.T[i].key<<" "<<t.T[i].offset<<" "<<t.T[i].openORclose<<" "<<t.T[i].deleteORnot<<'\n';
+}
+
+int search(HeshTable& t,int key)
+{
+    int i = hesh(key, t.L);
+    while(i<t.L && t.T[i].key != key && (t.T[i].openORclose==false&& t.T[i].deleteORnot==false)||( t.T[i].openORclose == true && t.T[i].deleteORnot == true ))
+    i++;
+    if(t.T[i].openORclose == true && t.T[i].deleteORnot == false)
+    {
+        return -1;
+    }
+    return i;
+}
+
+//удаление
+int deleteFromHeshTable(HeshTable& t, int key)
+{
+    int i = search(t,key);
+    if(i== -1) return -1; //нет записи в таблице
+    t.T[i].deleteORnot = true;
+    t.T[i].openORclose = true;
+    return 0;
+}
+
+int main()
+{
+    HeshTable T;
+    T.createHeshTable();
+    insertInHeshTable(123,0,T); //9
+    insertInHeshTable(12,2,T);//12
+    insertInHeshTable(19,1,T);//0
+    insertInHeshTable(9,4,T);//9 - 10 колизии
+    insertInHeshTable(28,2,T);//9 - 11 колизия
+    outTable(T);
+    typeitem r;
+    int i = search(T,28);
+    if(i != -1)
+    {
+        r=T.T[i];
+        cout<<r.key<<" "<<r.offset<<endl;
+    }
+    i = deleteFromHeshTable(T,123);
+    if(i==0)
+        cout<<"record is deleted"<< '\n';
+    else
+        cout<<"record is not found"<<'\n';
+    cout<<'\n';
+    outTable(T);
+    }

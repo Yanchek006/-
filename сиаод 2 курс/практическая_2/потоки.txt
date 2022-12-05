@@ -1,0 +1,65 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+using namespace std;
+//функция чтения данных файлв и вывода на монитор физического файла
+//Постусловие 0 - все хорошо, 1 - файл не открылся
+int readTextFile(string nameTF)
+{
+    ifstream tf(nameTF);
+    if(!tf) return 1;
+    int x;
+    while(!tf.eof())
+    {
+        tf >> x;
+        cout<<x<<' ';
+    }
+    cout<<'\n';
+    tf.close();
+    return 0;
+}
+
+//Функция создания текстового файла из четырех элементов исходного файла
+//Постусловие: 0 - все хорошо, 1 - вайл не открывется
+int createTextFile(string nameTf,string nameTf2)
+{
+    ifstream tf(nameTf);
+    if(!tf) return 1;
+    ofstream otf(nameTf2);
+    int x;
+    while(tf>>x)
+    {
+        if(x%2==1)
+        cout<<x<<' ';
+    }
+    cout<<'\n';
+    tf.close();
+    otf.close();
+    return 0;
+}
+//функция добавления чисел в файл
+//Постусловие: 0 - все хорошо, 1 - вайл не открывется
+int addTextFile(string nameFile, int a, int b)
+{
+    ofstream otf(nameFile, ios::app);
+    if(!otf) return 1;
+    otf<<'\n'<<a<<' '<<b;
+    otf.close();
+    return 0;
+}
+
+int main()
+{
+    int proverka = readTextFile("Fail.txt");
+    if(proverka == 1)
+        cout<<"File not found";
+
+        if(proverka==0)
+        {
+            int proverka = readTextFile("Fail.txt");
+        }
+        else{
+            cout<<"File not found";
+            addTextFile("Fail.txt",53,20);
+        }
+}

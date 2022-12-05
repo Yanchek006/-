@@ -1,0 +1,91 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+
+using namespace std;
+
+//реализация управления двоичным файлом с такой структурой записи
+struct record{
+
+    int key;
+    char data[100];
+
+};
+
+//создание бинарного файла из текстового
+//Постусловие: 0 - все хорошо, 1 - что-то пошло не так
+int CreateBinFile(string nametf, string namebf)
+{
+    ifstream itf(nametf);
+    if(itf)
+    {
+ fstream obf(namebf,ios::out | ios::binary);
+ record r;
+ while(!itf.eof())
+ {
+     itf >> r.key;
+     itf.get();
+     itf.getline(r.data,100,'\n');
+     obf.write((char*)&r,sizeof(record));
+ }
+ itf.close();
+ obf.close();
+ return 0;
+    }
+    return 1;
+}
+//вывод бинарного файла на монитор
+//Постусловие: 0 - все хорошо, 1 - что-то пошло не так
+int outBinFile(string namebf)
+{
+    fstream obf(namebf,ios::in | ios::binary);
+    if(obf.is_open())
+    {
+        record r;
+        obf.read((char*)&r,sizeof(r));
+        while(!obf.eof())
+        {
+            cout<<r.key<<" "<<r.data<<'\n';
+            obf.read((char*)&r,sizeof(record));
+        }
+        obf.close();
+        return 0;
+    }
+    return 1;
+}
+//функция ищет запись с заданным ключом и при успешном поиске возвращает порядковый номер записи в файле
+int searchKeyInBinFile(string namebf, int key)
+{
+    ifstream bf;
+    bf.open(namebf,ios::binary);
+    if(!bf) return 2; //не открылся
+    record r;
+    int numRecord = 0;
+    bf.read((char*)&r, sizeof(record));
+    while(!bf.eof())
+    {
+        if(r.key == key)
+        {
+            bf.close();
+            return numRecord;
+        }
+        numRecord++;
+        bf.read((char*)&r,sizeof(record));
+    }
+    bf.close();
+    return -1;
+}
+
+int main()
+{
+/*    int kod = CreateBinFile("AB.txt", "Data.dat");
+    if(kod==0)
+    {
+        outBinFile("Data.txt");
+    }
+    else cout<<"Error";
+    return 0;*/
+    int numRecord = searchKeyInBinFile("Data.dat",3);
+    cout<<numRecord<<endl;
+    return 0;
+}
